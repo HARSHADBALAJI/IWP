@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Supabase SDK -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script>
+    const SUPABASE_URL = "https://gtrdcisonsphngyubpyl.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imd0cmRjaXNvbnNwaG5neXVicHlsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgyNTQ0MTgsImV4cCI6MjA3MzgzMDQxOH0.g_SNO0id3OdM3g5OBe7R0k7GdadUAAodI7KPL7xkgto";
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </script>
+
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard | Christ University</title>
+  <link rel="stylesheet" href="../assests/css/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;500;700&display=swap" rel="stylesheet">
+</head>
+
+<style>
+/* Same CSS you already had */
+:root {
+  --primary: #002244;
+  --accent: #00b4d8;
+  --accent-dark: #0077b6;
+  --bg: #f7f9fc;
+  --white: #ffffff;
+  --text: #003049;
+  --muted: #888;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+a {
+  text-decoration: none;
+  color: var(--accent);
+  font-weight: 500;
+}
+
+nav {
+  background-color: var(--primary);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+}
+
+.nav-links a {
+  margin-left: 20px;
+  color: white;
+}
+
+.container {
+  padding: 2rem;
+}
+
+h1, h2, h3 {
+  color: var(--text);
+}
+
+.card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+  margin-bottom: 1.5rem;
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+}
+
+button {
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: var(--accent-dark);
+}
+
+.footer {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 12px;
+  color: var(--muted);
+}
+</style>
+
+<body>
+
+  <nav>
+    <h1 style="color:white">Christ University – Coding Skill Assessment Portal</h1>
+    <div class="nav-links">
+      <a href="./dashboard.html">Dashboard</a>
+      <a href="./tracker.html">Skill Tracker</a>
+      <a href="./performance.html">Performance</a>
+      <a href="./analytics.html">Analytics</a>
+      <a href="./feedback.html">Feedback</a>
+    </div>
+  </nav>
+
+  <main class="container">
+    <!-- Section: Welcome -->
+    <section aria-label="student-info">
+      <h2>Student Dashboard</h2>
+      <p style="color: var(--muted);">B.Tech CSE (AI & ML) | Department of AI, ML & Data Science</p>
+      <!-- Filled by Supabase -->
+      <p id="student-details">Loading student details...</p>
+    </section>
+
+    <!-- Section: Academic Profile -->
+    <section class="card" aria-label="student-profile">
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <img src="assets/img/avatar.png" alt="Profile Photo" style="width: 80px; height: 80px; border-radius: 50%;">
+        <div>
+          <h3>Academic Advisor</h3>
+          <p><strong>Mentor:</strong> <span id="mentor-name">Loading...</span></p>
+          <p><strong>Semester:</strong> <span id="semester">Loading...</span></p>
+          <p><strong>Last Login:</strong> <span id="last-login">Loading...</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section: Challenge Performance (static for now) -->
+    <section class="card" aria-label="challenge-metrics">
+      <h3>Challenge Completion Overview</h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-top: 20px;">
+        <div class="card" style="background: #e3f2fd;">
+          <h4>Total Challenges Attempted</h4>
+          <p id="total-challenges" style="font-size: 24px; font-weight: bold;">--</p>
+        </div>
+        <div class="card" style="background: #e0f7fa;">
+          <h4>Active Streak</h4>
+          <p style="font-size: 24px; font-weight: bold;">7 Days 🔥</p>
+        </div>
+        <div class="card" style="background: #f1f8e9;">
+          <h4>Observed Skill Growth</h4>
+          <p style="font-size: 24px; font-weight: bold;">+15%</p>
+        </div>
+        <div class="card" style="background: #fff3e0;">
+          <h4>Next Academic Milestone</h4>
+          <p style="font-size: 24px; font-weight: bold;">Complete 30 Challenges</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Mentor Review (static demo) -->
+    <section class="card" aria-label="mentor-review">
+      <h3>Faculty Feedback</h3>
+      <p id="mentor-feedback">Loading feedback...</p>
+    </section>
+  </main>
+
+  <footer class="footer">
+    © 2025 Department of Artificial Intelligence, Machine Learning & Data Science<br>
+    Christ University, Bangalore
+  </footer>
+
+  <script>
+  async function loadDashboard() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+      window.location.href = "index.html";
+      return;
+    }
+
+    // Get student profile
+    let { data: student, error } = await supabase
+      .from("students")
+      .select("*")
+      .eq("email", user.email)
+      .single();
+
+    if (student) {
+      document.getElementById("student-details").innerText =
+        `${student.name} | Reg No: ${student.register_no} | Email: ${student.email}`;
+      document.getElementById("mentor-name").innerText = student.mentor;
+      document.getElementById("semester").innerText = student.semester;
+      document.getElementById("last-login").innerText = new Date().toLocaleDateString();
+    }
+
+    // Get analytics
+    let { data: analytics } = await supabase
+      .from("analytics")
+      .select("correct_submissions, incorrect_submissions, missed_challenges")
+      .eq("student_id", student.id)
+      .single();
+
+    if (analytics) {
+      const total = analytics.correct_submissions + analytics.incorrect_submissions;
+      document.getElementById("total-challenges").innerText = `${total} / 30`;
+    }
+
+    // Get mentor feedback
+    let { data: fb } = await supabase
+      .from("feedback")
+      .select("mentor_feedback")
+      .eq("student_id", student.id)
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .single();
+
+    if (fb) {
+      document.getElementById("mentor-feedback").innerText = fb.mentor_feedback;
+    }
+  }
+  loadDashboard();
+  </script>
+
+</body>
+</html>
